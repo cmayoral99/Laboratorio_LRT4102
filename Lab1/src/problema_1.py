@@ -1,3 +1,6 @@
+#El código solicita ingresar un número entero en la consola de Python, se guarda en la variable `n` y
+#luego calcula la suma de los números del 1 hasta ese número `n` usando la fórmula proporcionadaa en la tarea
+
 # Le pido al usuario que ingrese un número entero positivo y lo convierto a entero
 n = int(input("Introduce un número entero positivo: "))
 
