@@ -17,11 +17,12 @@ A variable is a space in memory used to store information.
   Example:
   ```python
   print("Hello World")
-input(): Allows the user to enter data.
-Example:
-python
-Copiar
-name = input("What is your name? ")
+### Input and Output Functions
+- **`input()`**: Allows the user to enter data.  
+  Example:
+  ```python
+  name = input("What is your name? ")
+
 Mathematical Operators
 Python includes operators to perform calculations:
 
