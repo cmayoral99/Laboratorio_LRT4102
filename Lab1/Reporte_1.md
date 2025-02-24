@@ -109,11 +109,11 @@ Methods are functions defined within a class that describe the behavior of an ob
 
 ChatGPT was used to resolve syntax issues and errors in the six Python exercises. Additionally, the tool was leveraged to organize the .md format more systematically, discuss the functions present in the codes, and supplement some of them.
 
-
 ### References
 
-Python Software Foundation. (n.d.). *The Python Tutorial*. Retrieved [Month Day, Year], from https://docs.python.org/3/tutorial/
+Python Software Foundation. (n.d.). *The Python Tutorial*. Retrieved Retrieved March 5, 2025, from https://docs.python.org/3/tutorial/
 
-Python Software Foundation. (n.d.). *Classes*. Retrieved [Month Day, Year], from https://docs.python.org/3/tutorial/classes.html
+Python Software Foundation. (n.d.). *Classes*. Retrieved March 5, 2025, from https://docs.python.org/3/tutorial/classes.html
 
-OpenAI. (2023). *ChatGPT* [Large language model]. Retrieved [Month Day, Year], from https://openai.com/blog/chatgpt
+OpenAI. (2023). *ChatGPT* [Large language model]. Retrieved March 5, 2025, from https://openai.com/blog/chatgpt
+
