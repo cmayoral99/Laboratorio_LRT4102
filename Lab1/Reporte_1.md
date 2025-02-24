@@ -37,15 +37,15 @@ Python includes operators to perform calculations:
 ### Control Structures
 These allow you to control the flow of your program:
 
-Conditionals (if, elif, else):
+#### Conditionals (`if`, `elif`, `else`)
 Example:
-python
-Copiar
+```python
 age = 20
 if age >= 18:
     print("You are an adult")
 else:
     print("You are not an adult")
+
 ###Loops:
 for loop: Iterates over a sequence.
 Example:
