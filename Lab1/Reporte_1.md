@@ -2,8 +2,6 @@
 
 ## 1. Basic Concepts in Python
 
-Python is a very intuitive programming language that is easy to learn. Here are some fundamental concepts that I’ve used in my examples:
-
 ### Variables and Data Types
 A variable is a space in memory used to store information.
 - **Integers (`int`):** Whole numbers without decimals (e.g., `5`, `100`).
