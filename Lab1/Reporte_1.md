@@ -104,8 +104,16 @@ These are the properties of an object, like the name, price, or quantity in stoc
 ### Methods
 Methods are functions defined within a class that describe the behavior of an object. For example, in the inventory example, the `vender()` method updates the stock, the `mostrar_informacion()` method shows product details, and the `valor_producto()` method calculates the total value of that product in stock.
 
-## 4. Summary of Concepts Used in My Examples
 
-- **Variables and Data Types**: Used integers, floats, and strings to store information like hours worked, prices, or product names.
-- **Control Structures**: Used `for` and `while` loops to repeat actions, such as iterating over a matrix or prompting the user to guess a number until they got it right.
-- **Object-Oriented Programming (OOP)**: Created classes (`Producto` and `Inventario`) to organize the code so that each object has its own data and functions. This makes the code more organized and easier to manage.
+### Comments
+
+ChatGPT was used to resolve syntax issues and errors in the six Python exercises. Additionally, the tool was leveraged to organize the .md format more systematically, discuss the functions present in the codes, and supplement some of them.
+
+
+### References
+
+Python Software Foundation. (n.d.). *The Python Tutorial*. Retrieved [Month Day, Year], from https://docs.python.org/3/tutorial/
+
+Python Software Foundation. (n.d.). *Classes*. Retrieved [Month Day, Year], from https://docs.python.org/3/tutorial/classes.html
+
+OpenAI. (2023). *ChatGPT* [Large language model]. Retrieved [Month Day, Year], from https://openai.com/blog/chatgpt
