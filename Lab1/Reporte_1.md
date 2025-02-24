@@ -23,16 +23,16 @@ A variable is a space in memory used to store information.
   ```python
   name = input("What is your name? ")
 
-Mathematical Operators
+### Mathematical Operators
 Python includes operators to perform calculations:
 
-+ (addition): e.g., 2 + 3 equals 5.
-- (subtraction): e.g., 5 - 2 equals 3.
-* (multiplication): e.g., 4 * 3 equals 12.
-/ (division): e.g., 10 / 2 equals 5.0.
-// (integer division): e.g., 10 // 3 equals 3.
-% (modulus): e.g., 10 % 3 equals 1.
-** (power): e.g., 2 ** 3 equals 8.
+- **`+` (addition):** e.g., `2 + 3` equals `5`.
+- **`-` (subtraction):** e.g., `5 - 2` equals `3`.
+- **`*` (multiplication):** e.g., `4 * 3` equals `12`.
+- **`/` (division):** e.g., `10 / 2` equals `5.0`.
+- **`//` (integer division):** e.g., `10 // 3` equals `3`.
+- **`%` (modulus):** e.g., `10 % 3` equals `1`.
+- **`**` (power):** e.g., `2 ** 3` equals `8`.
 
 ### Control Structures
 These allow you to control the flow of your program:
