@@ -46,13 +46,13 @@ if age >= 18:
 else:
     print("You are not an adult")
 
-###Loops:
-for loop: Iterates over a sequence.
-Example:
-python
-Copiar
-for i in range(5):
-    print("Number", i)
+#### Loops:
+- **`for` loop:** Iterates over a sequence.  
+  Example:
+  ```python
+  for i in range(5):
+      print("Number", i)
+
 while loop: Repeats a block of code while a condition is true.
 Example:
 python
