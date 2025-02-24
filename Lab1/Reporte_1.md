@@ -35,7 +35,7 @@ Python includes operators to perform calculations:
 % (modulus): e.g., 10 % 3 equals 1.
 ** (power): e.g., 2 ** 3 equals 8.
 
-  Control Structures
+### Control Structures
 These allow you to control the flow of your program:
 
 Conditionals (if, elif, else):
@@ -47,7 +47,7 @@ if age >= 18:
     print("You are an adult")
 else:
     print("You are not an adult")
-Loops:
+###Loops:
 for loop: Iterates over a sequence.
 Example:
 python
@@ -62,17 +62,17 @@ i = 0
 while i < 5:
     print("Value", i)
     i += 1
-Comments and Indentation
+###Comments and Indentation
 Comments:
 Comments start with the # symbol and are used to explain the code.
 Example:
 python
 Copiar
-# This is a comment
+###### This is a comment
 print("Hello")
 Indentation:
-Indentation (using spaces at the beginning of lines) is crucial in Python for defining blocks of code, such as those for functions, conditionals, and loops.
-2. Introduction to Object-Oriented Programming (OOP) in Python
+###Indentation (using spaces at the beginning of lines) is crucial in Python for defining blocks of code, such as those for functions, conditionals, and loops.
+#2. Introduction to Object-Oriented Programming (OOP) in Python
 Object-Oriented Programming (OOP) is a style of programming that organizes code into “objects.” Each object contains data (attributes) and actions (methods) it can perform. In my inventory example, I used OOP to organize the code so that each product and the inventory have their own properties and functions.
 
 Classes:
