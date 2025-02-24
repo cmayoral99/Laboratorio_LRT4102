@@ -46,7 +46,7 @@ if age >= 18:
 else:
     print("You are not an adult")
 
-#### Loops:
+### Loops:
 - **`for` loop:** Iterates over a sequence.  
   Example:
   ```python
@@ -71,6 +71,7 @@ Copiar
 print("Hello")
 Indentation:
 ###Indentation (using spaces at the beginning of lines) is crucial in Python for defining blocks of code, such as those for functions, conditionals, and loops.
+
 #2. Introduction to Object-Oriented Programming (OOP) in Python
 Object-Oriented Programming (OOP) is a style of programming that organizes code into “objects.” Each object contains data (attributes) and actions (methods) it can perform. In my inventory example, I used OOP to organize the code so that each product and the inventory have their own properties and functions.
 
