@@ -1,26 +1,26 @@
+import rospy
+from geometry_msgs.msg import Twist
 import turtle
 
+# Función para escribir el ID dentro del entorno de la tortuga
 def escribir_id(id_str, velocidad):
-    # Configurar la pantalla
-    pantalla = turtle.Screen()
-    pantalla.title("Tortuga escribiendo el ID")
+    # Configuración de la ventana TurtleSim
+    screen = turtle.Screen()
+    screen.bgcolor("white")  # Fondo blanco
+    screen.title("Tortuga escribiendo el ID")
     
-    # Crear la tortuga y configurar la velocidad (1 lenta, 10 rápida; 0 es la máxima animación instantánea)
+    # Crear la tortuga y configurar la velocidad (1 es lento, 10 es rápido)
     t = turtle.Turtle()
     t.speed(velocidad)
     
-    # Posicionar la tortuga para que el texto se vea centrado
+    # Escribir el ID
     t.penup()
-    t.goto(-150, 0)
+    t.goto(-150, 0)  # Posicionar la tortuga en la pantalla
     t.pendown()
-    
-    # Escribir el ID con una fuente y tamaño definidos
     t.write(id_str, font=("Arial", 48, "normal"))
     
-    # Ocultar la tortuga y mantener la ventana abierta
-    t.hideturtle()
-    pantalla.mainloop()
+    # Mantener la ventana abierta hasta que la cerremos
+    screen.mainloop()
 
-# Llamada a la función con el ID "175787" y velocidad angular (puedes ajustar el valor de velocidad)
-escribir_id("175787", 10)
-
+# Llamada a la función con el ID "175787" y una velocidad de 5
+escribir_id("175787", 5)
