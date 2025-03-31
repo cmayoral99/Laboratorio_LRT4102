@@ -127,4 +127,7 @@ Upon executing both nodes, the following was observed:
 - Official ROS documentation.
 - Personal notes and tutorials on implementing nodes in ROS.
 - Experiences in developing distributed systems using ROS.
+- - APA Reference for ChatGPT used in formatting this markdown:
+ OpenAI. (2023). ChatGPT (Mar 14 version) [Large language model]. OpenAI. https://openai.com/chatgpt
+```
 ```
