@@ -1,20 +1,20 @@
-# Comunicación entre Nodos en ROS: Talker y Listener
+# Communication between Nodes in ROS: Talker and Listener
 
-## Introducción
-En esta práctica se desarrolló un paquete ROS denominado **Practicas_lab** que implementa la comunicación entre nodos a través del patrón publicador-suscriptor. Se crearon dos nodos esenciales: el *talker*, que publica mensajes, y el *listener*, que se suscribe a dichos mensajes. Esta implementación básica es fundamental para comprender la arquitectura distribuida en ROS.
+## Introduction
+In this practice, we developed a ROS package called **Practicas_lab** that implements communication between nodes using the publisher-subscriber pattern. Two essential nodes were created: the *talker*, which publishes messages, and the *listener*, which subscribes to those messages. This basic implementation is fundamental to understanding the distributed architecture in ROS.
 
-## Objetivos
-- Crear un paquete ROS con las dependencias `rospy`, `roscpp` y `std_msgs`.
-- Implementar un nodo publicador (*talker.py*) que envía mensajes periódicos en el tópico `chatter`.
-- Implementar un nodo suscriptor (*listener.py*) que recibe y muestra los mensajes publicados.
-- Compilar y ejecutar el paquete para validar el correcto funcionamiento de la comunicación entre nodos.
+## Objectives
+- Create a ROS package with the dependencies `rospy`, `roscpp`, and `std_msgs`.
+- Implement a publisher node (*talker.py*) that sends periodic messages on the `chatter` topic.
+- Implement a subscriber node (*listener.py*) that receives and displays the published messages.
+- Compile and run the package to validate the proper functioning of node communication.
 
 ---
 
-## Implementación
+## Implementation
 
-### Nodo Talker
-El nodo *talker* publica mensajes del tipo `String` en el tópico `chatter` a una frecuencia de 1 Hz. Cada mensaje incluye un contador que se incrementa en cada ciclo.
+### Talker Node
+The *talker* node publishes messages of type `String` on the `chatter` topic at a frequency of 1 Hz. Each message includes a counter that increments with each cycle.
 
 ```python
 import rospy
@@ -23,7 +23,7 @@ from std_msgs.msg import String
 def talker():
     pub = rospy.Publisher('chatter', String, queue_size=10)
     rospy.init_node('talker', anonymous=True)
-    rate = rospy.Rate(1)  # Frecuencia de 1 Hz
+    rate = rospy.Rate(1)  # Frequency of 1 Hz
     i = 0
     while not rospy.is_shutdown():
         hello_str = "hello world %s" % i
@@ -39,14 +39,14 @@ if __name__ == '__main__':
         pass
 ```
 
-**Observaciones:**
-- Se utiliza `anonymous=True` para asegurar que cada instancia del nodo tenga un nombre único, evitando conflictos.
-- La publicación se realiza de manera periódica a 1 Hz, facilitando la verificación de la transmisión de datos.
+**Observations:**
+- The use of `anonymous=True` ensures that each instance of the node has a unique name, preventing conflicts.
+- The publication occurs periodically at 1 Hz, making it easy to verify data transmission.
 
 ---
 
-### Nodo Listener
-El nodo *listener* se suscribe al tópico `chatter` y, mediante una función de callback, procesa cada mensaje recibido imprimiéndolo en la consola.
+### Listener Node
+The *listener* node subscribes to the `chatter` topic and, through a callback function, processes each received message by printing it to the console.
 
 ```python
 import rospy
@@ -64,67 +64,67 @@ if __name__ == '__main__':
     listener()
 ```
 
-**Observaciones:**
-- La función `rospy.spin()` mantiene el nodo en ejecución a la espera de mensajes.
-- Cada mensaje recibido es procesado por `chatter_callback`, lo que permite confirmar que la comunicación se realiza correctamente.
+**Observations:**
+- The `rospy.spin()` function keeps the node active, waiting for messages.
+- Each received message is processed by `chatter_callback`, confirming that communication is functioning correctly.
 
 ---
 
-## Proceso de Compilación y Ejecución
+## Compilation and Execution Process
 
-1. **Creación del paquete:**  
-   Se creó el paquete **Practicas_lab** utilizando el siguiente comando:
+1. **Package Creation:**  
+   The **Practicas_lab** package was created using the following command:
    ```
    catkin_create_pkg Practicas_lab rospy roscpp std_msgs
    ```
 
-2. **Colocación de archivos:**  
-   Se ubicaron los archivos `talker.py` y `listener.py` en el directorio correspondiente del paquete.
+2. **File Placement:**  
+   The files `talker.py` and `listener.py` were placed in the appropriate directory of the package.
 
-3. **Compilación:**  
-   Se compiló el paquete con el comando:
+3. **Compilation:**  
+   The package was compiled using the command:
    ```
    catkin_make
    ```
 
-4. **Ejecución de los nodos:**  
-   - Para iniciar el nodo *talker*:
+4. **Execution of Nodes:**  
+   - To start the *talker* node:
      ```
      rosrun Practicas_lab talker.py
      ```
-   - Para iniciar el nodo *listener*:
+   - To start the *listener* node:
      ```
      rosrun Practicas_lab listener.py
      ```
 
 ---
 
-## Resultados y Comparación
+## Results and Comparison
 
-Al ejecutar ambos nodos se verificó lo siguiente:
+Upon executing both nodes, the following was observed:
 
-| Nodo      | Función                                      | Resultado Obtenido                                           |
-|-----------|----------------------------------------------|--------------------------------------------------------------|
-| **Talker**   | Publicar mensajes en el tópico `chatter`   | Mensajes "hello world" con contador incremental publicados   |
-| **Listener** | Recibir y mostrar mensajes                  | Impresión en consola de cada mensaje recibido                |
-
----
-
-## Conclusiones
-
-- **Comunicación Asíncrona:**  
-  La arquitectura de ROS permite la comunicación asíncrona entre nodos, facilitando el intercambio de datos sin necesidad de acoplar los procesos directamente.
-
-- **Desacoplamiento de Nodos:**  
-  El patrón publicador-suscriptor permite que los nodos operen de manera independiente, lo que facilita la escalabilidad y el desarrollo de aplicaciones distribuidas.
-
-- **Verificación del Funcionamiento:**  
-  La correcta visualización de los mensajes en las consolas del *talker* y del *listener* confirma que la comunicación se ha implementado con éxito y que el paquete **Practicas_lab** está configurado de forma adecuada.
+| Node      | Function                                  | Outcome Observed                                                |
+|-----------|-------------------------------------------|-----------------------------------------------------------------|
+| **Talker**   | Publish messages on the `chatter` topic   | "hello world" messages with an incrementing counter were published  |
+| **Listener** | Receive and display messages              | Console output showing each received message                      |
 
 ---
 
-## Referencias
-- Documentación oficial de ROS.
-- Apuntes y tutoriales sobre la implementación de nodos en ROS.
-- Experiencias personales en el desarrollo de sistemas distribuidos utilizando ROS.
+## Conclusions
+
+- **Asynchronous Communication:**  
+  ROS's architecture allows for asynchronous communication between nodes, facilitating data exchange without direct coupling between processes.
+
+- **Decoupling of Nodes:**  
+  The publisher-subscriber pattern allows nodes to operate independently, making it easier to scale and develop distributed applications.
+
+- **Functionality Verification:**  
+  The proper display of messages on both the *talker* and *listener* consoles confirms that communication has been successfully implemented and that the **Practicas_lab** package is correctly configured.
+
+---
+
+## References
+- Official ROS documentation.
+- Personal notes and tutorials on implementing nodes in ROS.
+- Experiences in developing distributed systems using ROS.
 ```
