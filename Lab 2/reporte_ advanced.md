@@ -79,4 +79,6 @@ For future improvements, automatic tuning of the \( K_p \), \( K_i \), and \( K_
 - Official ROS and Turtlesim documentation.
 - Control theory lecture notes.
 - *PlotJuggler* tutorials for ROS.
+- APA Reference for ChatGPT used in formatting this markdown:
+ OpenAI. (2023). ChatGPT (Mar 14 version) [Large language model]. OpenAI. https://openai.com/chatgpt
 ```
