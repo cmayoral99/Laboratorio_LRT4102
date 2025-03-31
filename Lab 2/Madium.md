@@ -135,4 +135,6 @@ This practice session helped consolidate fundamental ROS concepts such as messag
 - **Node Integration:** Utilizing a launch file simplifies the simultaneous execution of multiple nodes, providing an integrated experience within the ROS environment.
 
 Overall, this practice was successful and provided a solid foundation for developing interactive and automated applications in robotic environments using ROS and `turtlesim`.
-
+- APA Reference for ChatGPT used in formatting this markdown:
+ OpenAI. (2023). ChatGPT (Mar 14 version) [Large language model]. OpenAI. https://openai.com/chatgpt
+```
