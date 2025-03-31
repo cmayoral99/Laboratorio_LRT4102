@@ -1,83 +1,82 @@
-# Control de Posición para Turtlesim (P, PI, PID)
+# Position Control for Turtlesim (P, PI, PID)
 
-## Introducción
-En esta práctica, implementamos y comparamos distintos tipos de controladores (P, PI y PID) para regular la posición de la tortuga en el simulador *Turtlesim* de ROS. Evaluamos el desempeño de cada controlador mediante herramientas de graficación como *PlotJuggler*.
+## Introduction
+In this practice, we implemented and compared different types of controllers (P, PI, and PID) to regulate the position of the turtle in the ROS *Turtlesim* simulator. We evaluated the performance of each controller using graphing tools such as *PlotJuggler*.
 
-## Objetivos
-- Implementar controladores de tipo P, PI y PID en *Turtlesim*.
-- Analizar la respuesta de cada controlador y su capacidad de alcanzar la posición deseada.
-- Comparar el desempeño de cada estrategia de control mediante gráficas.
+## Objectives
+- Implement P, PI, and PID controllers in *Turtlesim*.
+- Analyze the response of each controller and its ability to reach the desired position.
+- Compare the performance of each control strategy using graphs.
 
 ---
 
-## Implementación
-### Controlador Proporcional (P)
-Este controlador ajusta la velocidad en función del error presente:
+## Implementation
+
+### Proportional Controller (P)
+This controller adjusts the velocity based on the current error:
 
 \[ v_x = K_p \times error_x \]
 
-Donde:
-- \( v_x \) es la velocidad lineal en el eje X.
-- \( K_p \) es la constante proporcional.
-- \( error_x \) es la diferencia entre la posición deseada y la actual.
+Where:
+- \( v_x \) is the linear velocity along the X-axis.
+- \( K_p \) is the proportional constant.
+- \( error_x \) is the difference between the desired position and the current position.
 
-**Observaciones:**
-- La respuesta es rápida, pero pueden presentarse oscilaciones o errores en estado estable si \( K_p \) no es adecuado.
+**Observations:**
+- The response is fast, but oscillations or steady-state errors may occur if \( K_p \) is not properly tuned.
 
 ---
 
-### Controlador Proporcional-Integral (PI)
-El controlador PI introduce un término integral para corregir errores acumulados:
+### Proportional-Integral Controller (PI)
+The PI controller introduces an integral term to correct accumulated errors:
 
 \[ v_x = K_p \times error_x + K_i \times \sum error_x \]
 
-Donde:
-- \( K_i \) es la constante integral.
-- \( \sum error_x \) es la acumulación de errores a lo largo del tiempo.
+Where:
+- \( K_i \) is the integral constant.
+- \( \sum error_x \) represents the accumulation of errors over time.
 
-**Observaciones:**
-- Mejora la eliminación del error en estado estable.
-- Puede generar sobreimpulso si \( K_i \) es demasiado grande.
+**Observations:**
+- It improves the elimination of steady-state error.
+- It may cause overshoot if \( K_i \) is set too high.
 
 ---
 
-### Controlador Proporcional-Integral-Derivativo (PID)
-Este controlador añade un término derivativo para predecir el comportamiento del error y mejorar la estabilidad:
+### Proportional-Integral-Derivative Controller (PID)
+This controller adds a derivative term to predict the behavior of the error and improve stability:
 
 \[ v_x = K_p \times error_x + K_i \times \sum error_x + K_d \times \frac{d(error_x)}{dt} \]
 
-Donde:
-- \( K_d \) es la constante derivativa.
-- \( \frac{d(error_x)}{dt} \) es la derivada del error.
+Where:
+- \( K_d \) is the derivative constant.
+- \( \frac{d(error_x)}{dt} \) is the derivative of the error.
 
-**Observaciones:**
-- Mejora la estabilidad y reduce la sobreoscilación.
-- Puede ser más sensible al ruido en la señal de error.
-
----
-
-## Resultados y Comparación
-Para analizar el desempeño de los controladores, graficamos el error en función del tiempo en *PlotJuggler*.
-
-| Controlador | Estabilidad | Error en estado estable | Tiempo de respuesta |
-|-------------|------------|----------------------|-----------------|
-| **P**       | Media      | Puede persistir     | Rápido         |
-| **PI**      | Buena      | Bajo                | Medio          |
-| **PID**     | Excelente  | Mínimo             | Más rápido    |
-
-**Conclusiones:**
-- El controlador P responde rápido pero puede dejar un error residual.
-- El PI mejora la eliminación del error pero puede generar sobreimpulso.
-- El PID ofrece la mejor estabilidad y precisión.
-
-Para futuras mejoras, se podría implementar un ajuste automático de los parámetros \( K_p, K_i, K_d \) o probar otros métodos de control.
+**Observations:**
+- It improves stability and reduces overshooting.
+- It may be more sensitive to noise in the error signal.
 
 ---
 
-## Referencias
-- Documentación oficial de ROS y Turtlesim.
-- Apuntes de teoría de control.
-- Tutoriales de *PlotJuggler* para ROS.
+## Results and Comparison
+To analyze the performance of the controllers, we graphed the error over time using *PlotJuggler*.
+
+| Controller | Stability  | Steady-State Error | Response Time  |
+|------------|------------|--------------------|----------------|
+| **P**      | Medium     | May persist        | Fast           |
+| **PI**     | Good       | Low                | Medium         |
+| **PID**    | Excellent  | Minimal            | Fastest        |
+
+**Conclusions:**
+- The P controller responds quickly but may leave a residual error.
+- The PI controller improves error elimination but can generate overshoot.
+- The PID controller offers the best stability and precision.
+
+For future improvements, automatic tuning of the \( K_p \), \( K_i \), and \( K_d \) parameters or exploring other control methods could be implemented.
 
 ---
 
+## References
+- Official ROS and Turtlesim documentation.
+- Control theory lecture notes.
+- *PlotJuggler* tutorials for ROS.
+```
