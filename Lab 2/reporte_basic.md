@@ -1,4 +1,3 @@
-```markdown
 # Comunicación entre Nodos en ROS: Talker y Listener
 
 ## Introducción
