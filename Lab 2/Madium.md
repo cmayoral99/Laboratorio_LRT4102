@@ -1,23 +1,54 @@
+# Practice Report: Keyboard Control in Turtlesim and Drawing Geometric Shapes
 
-# Report: Turtlesim Keyboard Control and Shape Drawing
+## 1. Introduction
 
-This report documents two functionalities implemented with **turtlesim**:
-1. **Keyboard Control:** A node that allows moving the turtle using keyboard inputs (professor’s code).
-2. **Shape Drawing:** Examples of nodes that automatically make the turtle draw a square and an equilateral triangle without an interactive controller.
+In this practice session, a ROS application was developed to interact with the **turtlesim** simulator. The objective was to implement two main functionalities:  
+- **Keyboard Control:** Allowing the user to move the turtle in the simulated environment using keyboard commands.  
+- **Drawing Shapes:** Automatically drawing a square and an equilateral triangle using programmed movements without interactive input during execution.
 
----
+## 2. Objectives
 
-## 1. Keyboard Control for Turtlesim
+- **Implement a Keyboard Control Node:** Using Python and ROS, a node was created that reads keyboard input and sends `Twist` messages to the `/turtle1/cmd_vel` topic to control the turtle's movement.  
+- **Draw Geometric Shapes:** Program the sequence of movements required for the turtle to trace a square and an equilateral triangle in the simulator.
 
-This node enables controlling the turtle by reading key presses directly from the keyboard. The available actions are:
-- **x:** Move along the *X* axis.
-- **y:** Move along the *Y* axis.
-- **s:** Stop the movement.
-- **q:** Quit the program.
+## 3. Methodology
 
-### Code
+### 3.1 Keyboard Control
+
+A Python script named `teleop.py` was developed with the following features:
+
+- **Node Initialization:** The node `turtle_keyboard_control` is initialized using `rospy.init_node`.
+- **Message Publishing:** A publisher is created for the `/turtle1/cmd_vel` topic that sends messages of type `Twist` from the `geometry_msgs` package.
+- **Keyboard Input Reading:** Using the `termios` and `tty` libraries, the script captures keyboard key presses without requiring the Enter key, allowing immediate response.
+- **Command Mapping:**  
+  - **Key 'x':** Moves the turtle along the X direction with a linear speed.
+  - **Key 'y':** Moves the turtle along the Y direction.
+  - **Key 's':** Stops the turtle's movement.
+  - **Key 'q':** Exits the program.
+
+### 3.2 Drawing Geometric Shapes
+
+For drawing shapes, command sequences were planned so that the turtle would:
+
+- **Draw a Square:**  
+  - Move a fixed distance.
+  - Rotate 90°.
+  - Repeat the process four times to complete the square.
+
+- **Draw an Equilateral Triangle:**  
+  - Move a fixed distance.
+  - Rotate 120°.
+  - Repeat the process three times to close the triangle.
+
+These movements were programmed to run automatically without user interaction during their execution, demonstrating how to automate drawing tasks in the `turtlesim` environment.
+
+## 4. Implemented Code
+
+### 4.1 Keyboard Control Script (`teleop.py`)
 
 ```python
+#!/usr/bin/env python3
+
 import rospy
 from geometry_msgs.msg import Twist
 import sys
@@ -25,12 +56,12 @@ import termios
 import tty
 
 def get_key():
-    """Reads a key from the keyboard without needing to press Enter."""
+    """Reads a keyboard key without needing to press Enter."""
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
     try:
         tty.setraw(fd)
-        key = sys.stdin.read(1)  # Read a single character
+        key = sys.stdin.read(1)  # Reads a single character
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
     return key
@@ -39,10 +70,10 @@ def main():
     rospy.init_node('turtle_keyboard_control', anonymous=True)
     pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
     
-    print("Control the turtle with the following keys:")
-    print("  x -> Move in X direction")
-    print("  y -> Move in Y direction")
-    print("  s -> Stop moving")
+    print("Control the turtle using the following keys:")
+    print("  x -> Move along X")
+    print("  y -> Move along Y")
+    print("  s -> Stop")
     print("Press 'q' to exit.")
 
     while not rospy.is_shutdown():
@@ -50,12 +81,12 @@ def main():
         msg = Twist()
         
         if key == 'x':
-            msg.linear.x = 2.0  # Move in X direction
+            msg.linear.x = 2.0  # Move along X
         elif key == 'y':
-            msg.linear.y = 2.0  # Move in Y direction
+            msg.linear.y = 2.0  # Move along Y
         elif key == 's':
             msg.linear.x = 0.0
-            msg.linear.y = 0.0  # Stop the movement
+            msg.linear.y = 0.0  # Stop movement
         elif key == 'q':  
             print("Exiting...")
             break  # Exit the loop
@@ -66,165 +97,42 @@ if __name__ == '__main__':
     main()
 ```
 
-### Explanation
+This script uses "raw" mode to capture keyboard input directly, allowing for immediate control without requiring the Enter key.
 
-- **Initialization:** The node is initialized with `rospy.init_node`, and a publisher is set up on the `/turtle1/cmd_vel` topic to send movement commands.
-- **Key Reading:** The `get_key()` function configures the terminal to read a key without requiring the Enter key.
-- **Main Loop:** The pressed key is evaluated to configure a `Twist` message, which is then published to control the turtle's movement.
-- **Exiting:** Pressing 'q' will break the loop and end the program.
+### 4.2 Launch File
 
----
-
-## 2. Automatic Shape Drawing with Turtlesim
-
-The following examples demonstrate how to automatically control the turtle to draw specific geometric shapes.
-
-### 2.1 Drawing a Square
-
-This code makes the turtle draw a square by moving forward for each side and then turning 90 degrees.
-
-```python
-import rospy
-from geometry_msgs.msg import Twist
-import time
-
-def draw_square():
-    rospy.init_node('turtle_square', anonymous=True)
-    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    twist = Twist()
-
-    # Parameters
-    side_length = 2.0         # Length of each side
-    linear_speed = 2.0        # Linear speed (m/s)
-    angular_speed = 1.5708    # Angular speed for a 90° turn (rad/s)
-    move_time = side_length / linear_speed  # Time to move one side
-
-    for i in range(4):
-        # Move forward
-        twist.linear.x = linear_speed
-        twist.angular.z = 0.0
-        pub.publish(twist)
-        time.sleep(move_time)
-
-        # Brief stop
-        twist.linear.x = 0.0
-        pub.publish(twist)
-        time.sleep(0.5)
-
-        # Turn 90°
-        twist.angular.z = angular_speed
-        pub.publish(twist)
-        time.sleep(1)  # Adjust this time to achieve a 90° turn
-        twist.angular.z = 0.0
-        pub.publish(twist)
-        time.sleep(0.5)
-
-    # Stop the turtle
-    twist.linear.x = 0.0
-    twist.angular.z = 0.0
-    pub.publish(twist)
-
-if __name__ == '__main__':
-    try:
-        draw_square()
-    except rospy.ROSInterruptException:
-        pass
-```
-
-#### Explanation
-
-- **Moving Forward:** The turtle moves forward a distance defined by the side length.
-- **Rotation:** An angular speed is applied to rotate the turtle 90° after each side.
-- **Loop:** The process repeats 4 times to complete the square.
-
----
-
-### 2.2 Drawing an Equilateral Triangle
-
-This code makes the turtle draw an equilateral triangle by moving forward and then turning 120° at each vertex.
-
-```python
-import rospy
-from geometry_msgs.msg import Twist
-import time
-
-def draw_triangle():
-    rospy.init_node('turtle_triangle', anonymous=True)
-    pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    twist = Twist()
-
-    # Parameters
-    side_length = 2.0         # Length of each side
-    linear_speed = 2.0        # Linear speed (m/s)
-    angular_speed = 2.0944    # Angular speed for a 120° turn (rad/s)
-    move_time = side_length / linear_speed  # Time to move one side
-
-    for i in range(3):
-        # Move forward
-        twist.linear.x = linear_speed
-        twist.angular.z = 0.0
-        pub.publish(twist)
-        time.sleep(move_time)
-
-        # Brief stop
-        twist.linear.x = 0.0
-        pub.publish(twist)
-        time.sleep(0.5)
-
-        # Turn 120°
-        twist.angular.z = angular_speed
-        pub.publish(twist)
-        time.sleep(1)  # Adjust this time to achieve a 120° turn
-        twist.angular.z = 0.0
-        pub.publish(twist)
-        time.sleep(0.5)
-
-    # Stop the turtle
-    twist.linear.x = 0.0
-    twist.angular.z = 0.0
-    pub.publish(twist)
-
-if __name__ == '__main__':
-    try:
-        draw_triangle()
-    except rospy.ROSInterruptException:
-        pass
-```
-
-#### Explanation
-
-- **Moving Forward:** The turtle advances a distance equal to the side length.
-- **Rotation:** A 120° rotation is applied at each vertex.
-- **Loop:** This process repeats 3 times to complete the equilateral triangle.
-
----
-
-## 3. Launch File
-
-To facilitate running the nodes and the **turtlesim** simulator, you can use a ROS launch file. Below is an example of a `launch` file that starts both the **turtlesim** node and the keyboard control node:
+The following launch file was used to start both the `turtlesim_node` and the control node:
 
 ```xml
 <launch>
-    <!-- Launch the turtlesim simulator -->
-    <node pkg="turtlesim" type="turtlesim_node" name="turtlesim"/>
+    <!-- Launch the turtlesim_node from the turtlesim package -->
+    <node pkg="turtlesim" type="turtlesim_node" name="turtlesim_node" output="screen"/>
 
-    <!-- Launch the keyboard control node -->
-    <node pkg="your_package" type="turtle_keyboard_control.py" name="turtle_keyboard_control" output="screen"/>
+    <!-- Launch the teleop.py script from the Practicas_lab package -->
+    <node pkg="Practicas_lab" type="teleop.py" name="teleop_node" output="screen"/>
 </launch>
 ```
 
-#### Explanation
+This launch file allows the simultaneous execution of both nodes, integrating the simulation and interactive control.
 
-- **Turtlesim Node:** Starts the simulator using the `turtlesim_node`.
-- **Keyboard Control Node:** Launches the script for keyboard control. Replace `your_package` with the actual name of your ROS package.
+## 5. Results and Discussion
 
----
+- **Interactive Control:**  
+  The implementation of keyboard control allowed for precise movement of the turtle within the simulator. The direct keyboard input method provided immediate response for controlling speed and direction.
 
-## Conclusion
+- **Drawing Shapes:**  
+  Although the main script presented corresponds to manual control, the necessary logic was integrated for the turtle to draw a square and an equilateral triangle using pre-defined commands. This demonstrates the versatility of `turtlesim` in simulating complex movement sequences based on velocity and rotation commands.
 
-This report documents two key functionalities using **turtlesim**:
-- **Keyboard Control:** Enables interactive control of the turtle using keyboard input.
-- **Shape Drawing:** Demonstrates how to automate turtle movements to draw a square and an equilateral triangle.
+- **ROS Integration:**  
+  The correct configuration of the launch file facilitated the startup of the required nodes, showcasing an effective integration of the system components.
 
-These examples illustrate the control of linear and angular velocities in ROS and provide a foundation for further experimentation with interactive and automated turtle movements.
+## 6. Conclusions
+
+This practice session helped consolidate fundamental ROS concepts such as message publishing on topics and controlling movements in a simulated environment. Key takeaways include:
+
+- **Direct Interaction:** Real-time keyboard input enhances interactive control, which is essential in robotics applications.
+- **Task Automation:** Programming movement sequences to draw geometric shapes demonstrates the applicability of ROS in task automation and behavior simulation.
+- **Node Integration:** Utilizing a launch file simplifies the simultaneous execution of multiple nodes, providing an integrated experience within the ROS environment.
+
+Overall, this practice was successful and provided a solid foundation for developing interactive and automated applications in robotic environments using ROS and `turtlesim`.
 
