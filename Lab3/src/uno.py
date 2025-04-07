@@ -55,9 +55,12 @@ def main():
         if result:
             x_current, y_current, theta_current = result
 
-            # DTG y ATG siempre serán 0.0 porque la tortuga está en la posición exacta
-            dtg = 0.0
-            atg_deg = 0.0
+            # Calcular Distance to Goal (DTG)
+            dtg = math.sqrt((x_goal - x_current)**2 + (y_goal - y_current)**2)
+
+            # Calcular Angle to Goal (ATG) en radianes y luego convertir a grados
+            atg_rad = math.atan2((y_goal - y_current), (x_goal - x_current))
+            atg_deg = math.degrees(atg_rad)
 
             print(f"\nDistance to Goal (DTG): {dtg:.4f}")
             print(f"Angle to Goal (ATG): {atg_deg:.4f}°")
@@ -67,4 +70,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
