@@ -1,3 +1,4 @@
+Claudia Mayoral 175787
 # Proyecto: Movimiento de la Tortuga en ROS
 
 Este programa fue creado para mover una tortuga en un entorno simulado utilizando ROS (Robot Operating System). La tortuga se posiciona en las coordenadas que se le proporcionan y calcula dos valores importantes: **Distancia a la Meta (DTG)** y **Ángulo hacia la Meta (ATG)**. Además, cada vez que el usuario ingresa nuevas coordenadas, la tortuga se "matará" y reaparecerá en la nueva ubicación.
@@ -7,15 +8,15 @@ Este programa fue creado para mover una tortuga en un entorno simulado utilizand
 1. **Entrada de Coordenadas y Ángulo**: El programa pide al usuario ingresar las coordenadas **x** y **y** de la meta, además del ángulo **theta** en grados, que es lo que va a definir la orientación de la tortuga.
 
 2. **Cálculo de la Distancia a la Meta (DTG)**: El programa calcula la **Distancia a la Meta (DTG)** usando la fórmula de distancia Euclidiana:
-   \[
-   DTG = \sqrt{(x_{\text{meta}} - x_{\text{actual}})^2 + (y_{\text{meta}} - y_{\text{actual}})^2}
-   \]
-   Esto da la distancia directa entre la posición actual de la tortuga y la meta.
+   ```
+   DTG = √((x_meta - x_actual)² + (y_meta - y_actual)²)
+   ```
+   Esta fórmula calcula la distancia directa entre la posición actual de la tortuga y la meta.
 
 3. **Cálculo del Ángulo hacia la Meta (ATG)**: El **Ángulo hacia la Meta (ATG)** se calcula con la función `atan2` de la librería de Python, la cual toma las diferencias entre las coordenadas **x** y **y** para calcular el ángulo en radianes. Luego lo convierto a grados:
-   \[
-   ATG = \text{atan2}(y_{\text{meta}} - y_{\text{actual}}, x_{\text{meta}} - x_{\text{actual}})
-   \]
+   ```
+   ATG = atan2(y_meta - y_actual, x_meta - x_actual)
+   ```
    Este ángulo nos indica en qué dirección debe moverse la tortuga para llegar a la meta.
 
 4. **Matar y Crear la Tortuga**: Cada vez que el usuario ingresa nuevas coordenadas, se "mata" la tortuga anterior (si estaba presente) y se genera una nueva tortuga en las coordenadas y el ángulo dados. Esto es necesario para empezar siempre desde una posición controlada y no desde donde estaba antes.
@@ -38,4 +39,4 @@ Este programa muestra cómo interactuar con el sistema ROS para mover una tortug
 
 - ROS (Robot Operating System)
 - Paquete `turtlesim` para la simulación de la tortuga
-
+```
