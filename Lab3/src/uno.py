@@ -4,6 +4,7 @@ import rospy
 from turtlesim.srv import Spawn, Kill
 import math
 from turtlesim.msg import Pose
+from geometry_msgs.msg import Twist
 
 def kill_turtle(name):
     rospy.wait_for_service('/kill')
@@ -25,17 +26,36 @@ def spawn_turtle(x, y, theta_deg, name):
         return None
 
 def draw_line(x_start, y_start, x_end, y_end):
-    # Publicar un mensaje a la tortuga para dibujar la línea
-    turtle_pub = rospy.Publisher('/turtle1/pen', Pose, queue_size=10)
-    rospy.sleep(1)  # Esperar para que el mensaje sea procesado
+    # Publicar un mensaje a la tortuga para moverla y dibujar la línea
+    turtle_pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+    rate = rospy.Rate(10)  # Frecuencia de publicación
 
-    # Configurar el lápiz para dibujar
-    turtle_pub.publish(Pose(x=x_start, y=y_start, theta=0))  # Empezamos en la posición de inicio
-    rospy.sleep(1)  # Esperar para que el mensaje sea procesado
+    # Activar el lápiz
+    rospy.wait_for_service('/turtle1/pen')
+    pen_service = rospy.ServiceProxy('/turtle1/pen', SetPen)
+    pen_service(True, 0, 0, 255, 3)  # Activar lápiz y establecer el color (rojo, grosor 3)
 
-    # Dibujar la línea
-    turtle_pub.publish(Pose(x=x_end, y=y_end, theta=0))  # Mover a la posición final
-    rospy.sleep(1)
+    # Establecer posición inicial de la tortuga
+    move_cmd = Twist()
+    move_cmd.linear.x = 0
+    move_cmd.angular.z = 0
+
+    # Mover la tortuga a la posición de inicio
+    turtle_pub.publish(move_cmd)
+    rate.sleep()
+
+    # Mover la tortuga hasta el objetivo
+    move_cmd.linear.x = (x_end - x_start) / 10  # Divide el movimiento en pasos pequeños
+    move_cmd.angular.z = 0  # No hay rotación, solo movimiento recto
+
+    for _ in range(10):  # Realizar 10 pasos hacia el objetivo
+        turtle_pub.publish(move_cmd)
+        rate.sleep()
+
+    # Detener el movimiento después de alcanzar la posición final
+    move_cmd.linear.x = 0
+    move_cmd.angular.z = 0
+    turtle_pub.publish(move_cmd)
 
 def main():
     rospy.init_node('turtle_spawn_goal', anonymous=True)
