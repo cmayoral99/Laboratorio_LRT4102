@@ -1,65 +1,111 @@
 #!/usr/bin/env python3
 
-# Importamos las librerías necesarias
 import rospy
-from turtlesim.srv import Spawn, Kill
-import math
+from geometry_msgs.msg import Twist
+from turtlesim.msg import Pose
+from math import atan2, sqrt, radians, degrees
 
-# Función para matar la tortuga
-def matar_tortuga(nombre):
-    # Esperamos a que el servicio /kill esté disponible
-    rospy.wait_for_service('/kill')
-    try:
-        # Llamamos al servicio para matar la tortuga
-        kill = rospy.ServiceProxy('/kill', Kill)
-        kill(nombre)
-    except rospy.ServiceException:
-        rospy.logwarn(f"No se pudo eliminar la tortuga {nombre}, probablemente ya está eliminada.")
+class TurtleMover:
+    def __init__(self):
+        # Inicializa el nodo de ROS
+        rospy.init_node('turtle_mover', anonymous=True)
 
-# Función para generar la tortuga en una nueva posición
-def crear_tortuga(x, y, angulo_deg, nombre):
-    rospy.wait_for_service('/spawn')
-    try:
-        # Convertimos el ángulo de grados a radianes
-        angulo_rad = math.radians(angulo_deg)
-        spawn = rospy.ServiceProxy('/spawn', Spawn)
-        spawn(x, y, angulo_rad, nombre)
-        return x, y, angulo_rad
-    except rospy.ServiceException as e:
-        rospy.logerr(f"Error al crear la tortuga: {e}")
-        return None
+        # Subscripción a la posición de la tortuga
+        self.pose_subscriber = rospy.Subscriber('/turtle1/pose', Pose, self.update_position)
+        # Publicación de los comandos de velocidad
+        self.velocity_publisher = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
 
-# Función principal
-def main():
-    # Inicializamos el nodo de ROS
-    rospy.init_node('mover_tortuga_a_meta', anonymous=True)
+        # Frecuencia para mantener el control de la tortuga
+        self.update_rate = rospy.Rate(10)  # 10 Hz
 
-    while True:  # El ciclo se repite para pedir nuevas coordenadas continuamente
-        # Pedimos al usuario las coordenadas y el ángulo de la meta
-        x_meta = float(input("Ingresa la coordenada x de la meta: "))
-        y_meta = float(input("Ingresa la coordenada y de la meta: "))
-        angulo_meta = float(input("Ingresa el ángulo de la meta (en grados): "))
+        # Variables de posición inicial
+        self.current_x = 0
+        self.current_y = 0
+        self.current_theta = 0
 
-        # Eliminamos la tortuga si ya existe
-        matar_tortuga("turtle1")
+    def update_position(self, data):
+        """Actualizar la posición y orientación actuales de la tortuga"""
+        self.current_x = data.x
+        self.current_y = data.y
+        self.current_theta = data.theta
 
-        # Creamos la tortuga en la nueva posición
-        resultado = crear_tortuga(x_meta, y_meta, angulo_meta, "turtle1")
+    def get_target_position(self):
+        """Solicitar la nueva meta y orientación al usuario"""
+        print("\nIntroduce la nueva meta para la tortuga:")
+        target_x = float(input("Coordenada x de la meta: "))
+        target_y = float(input("Coordenada y de la meta: "))
+        target_theta_deg = float(input("Ángulo de orientación deseado (en grados): "))
+        return target_x, target_y, radians(target_theta_deg)
 
-        if resultado:
-            x_actual, y_actual, angulo_actual = resultado
+    def move_turtle(self, target_x, target_y):
+        """Mover la tortuga hacia la meta usando control proporcional"""
+        velocity_msg = Twist()
+        Kp_distance = 1.5  # Constante proporcional para la distancia
+        Kp_angle = 6.0  # Constante proporcional para el ángulo
 
-            # Calculamos la Distancia a la Meta (DTG)
-            dtg = math.sqrt((x_meta - x_actual)**2 + (y_meta - y_actual)**2)
+        while not rospy.is_shutdown():
+            # Calcular la distancia a la meta (DTG) y el ángulo hacia la meta (ATG)
+            distance_to_goal = sqrt((target_x - self.current_x)**2 + (target_y - self.current_y)**2)
+            angle_to_goal = atan2(target_y - self.current_y, target_x - self.current_x)
+            angle_diff = angle_to_goal - self.current_theta
 
-            # Calculamos el Ángulo hacia la Meta (ATG) en radianes y lo convertimos a grados
-            atg_rad = math.atan2((y_meta - y_actual), (x_meta - x_actual))
-            atg_deg = math.degrees(atg_rad)
+            # Normalización del ángulo para evitar valores fuera de rango
+            angle_diff = (angle_diff + 3.14159) % (2 * 3.14159) - 3.14159
 
-            # Mostramos los resultados
-            print(f"\nDistancia a la meta (DTG): {dtg:.4f}")
-            print(f"Ángulo hacia la meta (ATG): {atg_deg:.4f}°")
+            # Velocidades proporcionales a los errores calculados
+            velocity_msg.linear.x = Kp_distance * distance_to_goal
+            velocity_msg.angular.z = Kp_angle * angle_diff
 
-# Ejecutamos la función principal
+            self.velocity_publisher.publish(velocity_msg)
+
+            rospy.loginfo("DTG: %.4f | ATG: %.4f°", distance_to_goal, degrees(angle_diff))
+
+            # Detener si estamos suficientemente cerca de la meta
+            if distance_to_goal < 0.1:
+                break
+
+            self.update_rate.sleep()
+
+        # Detener la tortuga al llegar a la meta
+        velocity_msg.linear.x = 0
+        velocity_msg.angular.z = 0
+        self.velocity_publisher.publish(velocity_msg)
+        rospy.loginfo("Meta alcanzada.\n")
+
+    def rotate_turtle(self, target_theta):
+        """Rotar la tortuga hacia el ángulo deseado"""
+        velocity_msg = Twist()
+        Kp_rotation = 4.0  # Constante proporcional para la rotación
+
+        while not rospy.is_shutdown():
+            angle_error = target_theta - self.current_theta
+            angle_error = (angle_error + 3.14159) % (2 * 3.14159) - 3.14159
+
+            velocity_msg.angular.z = Kp_rotation * angle_error
+            self.velocity_publisher.publish(velocity_msg)
+
+            rospy.loginfo("Error de ángulo: %.4f°", degrees(angle_error))
+
+            # Detener la rotación cuando el error sea pequeño
+            if abs(angle_error) < 0.05:
+                break
+
+            self.update_rate.sleep()
+
+        # Detener la rotación
+        velocity_msg.angular.z = 0
+        self.velocity_publisher.publish(velocity_msg)
+
+    def start(self):
+        """Función principal que gestiona el movimiento hacia la meta"""
+        while not rospy.is_shutdown():
+            target_x, target_y, target_theta = self.get_target_position()
+            self.move_turtle(target_x, target_y)
+            self.rotate_turtle(target_theta)
+
 if __name__ == '__main__':
-    main()
+    try:
+        turtle_controller = TurtleMover()
+        turtle_controller.start()
+    except rospy.ROSInterruptException:
+        pass
