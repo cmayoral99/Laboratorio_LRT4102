@@ -1,92 +1,65 @@
 #!/usr/bin/env python3
 
+# Importamos las librerías necesarias
 import rospy
 from turtlesim.srv import Spawn, Kill
 import math
-from turtlesim.msg import Pose
-from geometry_msgs.msg import Twist
 
-def kill_turtle(name):
+# Función para matar la tortuga
+def matar_tortuga(nombre):
+    # Esperamos a que el servicio /kill esté disponible
     rospy.wait_for_service('/kill')
     try:
+        # Llamamos al servicio para matar la tortuga
         kill = rospy.ServiceProxy('/kill', Kill)
-        kill(name)
+        kill(nombre)
     except rospy.ServiceException:
-        rospy.logwarn(f"No se pudo eliminar {name}, probablemente ya fue eliminada.")
+        rospy.logwarn(f"No se pudo eliminar la tortuga {nombre}, probablemente ya está eliminada.")
 
-def spawn_turtle(x, y, theta_deg, name):
+# Función para generar la tortuga en una nueva posición
+def crear_tortuga(x, y, angulo_deg, nombre):
     rospy.wait_for_service('/spawn')
     try:
-        theta_rad = math.radians(theta_deg)  # Convertir de grados a radianes
+        # Convertimos el ángulo de grados a radianes
+        angulo_rad = math.radians(angulo_deg)
         spawn = rospy.ServiceProxy('/spawn', Spawn)
-        spawn(x, y, theta_rad, name)
-        return x, y, theta_rad
+        spawn(x, y, angulo_rad, nombre)
+        return x, y, angulo_rad
     except rospy.ServiceException as e:
         rospy.logerr(f"Error al crear la tortuga: {e}")
         return None
 
-def draw_line(x_start, y_start, x_end, y_end):
-    # Publicar un mensaje a la tortuga para moverla y dibujar la línea
-    turtle_pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
-    rate = rospy.Rate(10)  # Frecuencia de publicación
-
-    # Activar el lápiz
-    rospy.wait_for_service('/turtle1/pen')
-    pen_service = rospy.ServiceProxy('/turtle1/pen', SetPen)
-    pen_service(True, 0, 0, 255, 3)  # Activar lápiz y establecer el color (rojo, grosor 3)
-
-    # Establecer posición inicial de la tortuga
-    move_cmd = Twist()
-    move_cmd.linear.x = 0
-    move_cmd.angular.z = 0
-
-    # Mover la tortuga a la posición de inicio
-    turtle_pub.publish(move_cmd)
-    rate.sleep()
-
-    # Mover la tortuga hasta el objetivo
-    move_cmd.linear.x = (x_end - x_start) / 10  # Divide el movimiento en pasos pequeños
-    move_cmd.angular.z = 0  # No hay rotación, solo movimiento recto
-
-    for _ in range(10):  # Realizar 10 pasos hacia el objetivo
-        turtle_pub.publish(move_cmd)
-        rate.sleep()
-
-    # Detener el movimiento después de alcanzar la posición final
-    move_cmd.linear.x = 0
-    move_cmd.angular.z = 0
-    turtle_pub.publish(move_cmd)
-
+# Función principal
 def main():
-    rospy.init_node('turtle_spawn_goal', anonymous=True)
+    # Inicializamos el nodo de ROS
+    rospy.init_node('mover_tortuga_a_meta', anonymous=True)
 
-    while True:  # Esto permitirá que el programa siga ejecutándose indefinidamente
-        # Pedir al usuario la posición objetivo (goal)
-        x_goal = float(input("Ingresa la coordenada x del goal: "))
-        y_goal = float(input("Ingresa la coordenada y del goal: "))
-        theta_goal_deg = float(input("Ingresa el ángulo theta del goal (en grados): "))
+    while True:  # El ciclo se repite para pedir nuevas coordenadas continuamente
+        # Pedimos al usuario las coordenadas y el ángulo de la meta
+        x_meta = float(input("Ingresa la coordenada x de la meta: "))
+        y_meta = float(input("Ingresa la coordenada y de la meta: "))
+        angulo_meta = float(input("Ingresa el ángulo de la meta (en grados): "))
 
-        # Eliminar la tortuga inicial
-        kill_turtle("turtle1")
+        # Eliminamos la tortuga si ya existe
+        matar_tortuga("turtle1")
 
-        # Crear la tortuga en la posición deseada
-        result = spawn_turtle(x_goal, y_goal, theta_goal_deg, "turtle1")
+        # Creamos la tortuga en la nueva posición
+        resultado = crear_tortuga(x_meta, y_meta, angulo_meta, "turtle1")
 
-        if result:
-            x_current, y_current, theta_current = result
+        if resultado:
+            x_actual, y_actual, angulo_actual = resultado
 
-            # Calcular Distance to Goal (DTG)
-            dtg = math.sqrt((x_goal - x_current)**2 + (y_goal - y_current)**2)
+            # Calculamos la Distancia a la Meta (DTG)
+            dtg = math.sqrt((x_meta - x_actual)**2 + (y_meta - y_actual)**2)
 
-            # Calcular Angle to Goal (ATG) en radianes y luego convertir a grados
-            atg_rad = math.atan2((y_goal - y_current), (x_goal - x_current))
+            # Calculamos el Ángulo hacia la Meta (ATG) en radianes y lo convertimos a grados
+            atg_rad = math.atan2((y_meta - y_actual), (x_meta - x_actual))
             atg_deg = math.degrees(atg_rad)
 
-            print(f"\nDistance to Goal (DTG): {dtg:.4f}")
-            print(f"Angle to Goal (ATG): {atg_deg:.4f}°")
+            # Mostramos los resultados
+            print(f"\nDistancia a la meta (DTG): {dtg:.4f}")
+            print(f"Ángulo hacia la meta (ATG): {atg_deg:.4f}°")
 
-            # Dibujar la línea desde la posición anterior hasta la nueva
-            draw_line(x_current, y_current, x_goal, y_goal)
-
+# Ejecutamos la función principal
 if __name__ == '__main__':
     main()
