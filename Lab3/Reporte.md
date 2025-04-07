@@ -1,42 +1,44 @@
 Claudia Mayoral 175787
-# Proyecto: Movimiento de la Tortuga en ROS
+Sure! Here's the report translated into English:
 
-Este programa fue creado para mover una tortuga en un entorno simulado utilizando ROS (Robot Operating System). La tortuga se posiciona en las coordenadas que se le proporcionan y calcula dos valores importantes: **Distancia a la Meta (DTG)** y **Ángulo hacia la Meta (ATG)**. Además, cada vez que el usuario ingresa nuevas coordenadas, la tortuga se "matará" y reaparecerá en la nueva ubicación.
 
-## ¿Qué hace el programa?
+# Project: Turtle Movement in ROS
 
-1. **Entrada de Coordenadas y Ángulo**: El programa pide al usuario ingresar las coordenadas **x** y **y** de la meta, además del ángulo **theta** en grados, que es lo que va a definir la orientación de la tortuga.
+This program was created to move a turtle in a simulated environment using ROS (Robot Operating System). The turtle is positioned at the given coordinates and calculates two important values: **Distance to Goal (DTG)** and **Angle to Goal (ATG)**. Additionally, every time the user enters new coordinates, the turtle will be "killed" and will reappear at the new location.
 
-2. **Cálculo de la Distancia a la Meta (DTG)**: El programa calcula la **Distancia a la Meta (DTG)** usando la fórmula de distancia Euclidiana:
+## What does the program do?
+
+1. **Input Coordinates and Angle**: The program asks the user to input the **x** and **y** coordinates of the goal, as well as the **theta** angle in degrees, which defines the orientation of the turtle.
+
+2. **Calculation of Distance to Goal (DTG)**: The program calculates the **Distance to Goal (DTG)** using the Euclidean distance formula:
    ```
-   DTG = √((x_meta - x_actual)² + (y_meta - y_actual)²)
+   DTG = √((x_goal - x_current)² + (y_goal - y_current)²)
    ```
-   Esta fórmula calcula la distancia directa entre la posición actual de la tortuga y la meta.
+   This formula calculates the direct distance between the turtle's current position and the goal.
 
-3. **Cálculo del Ángulo hacia la Meta (ATG)**: El **Ángulo hacia la Meta (ATG)** se calcula con la función `atan2` de la librería de Python, la cual toma las diferencias entre las coordenadas **x** y **y** para calcular el ángulo en radianes. Luego lo convierto a grados:
+3. **Calculation of Angle to Goal (ATG)**: The **Angle to Goal (ATG)** is calculated using Python's `atan2` function, which takes the differences between the **x** and **y** coordinates to calculate the angle in radians. It is then converted to degrees:
    ```
-   ATG = atan2(y_meta - y_actual, x_meta - x_actual)
+   ATG = atan2(y_goal - y_current, x_goal - x_current)
    ```
-   Este ángulo nos indica en qué dirección debe moverse la tortuga para llegar a la meta.
+   This angle tells us in which direction the turtle needs to move to reach the goal.
 
-4. **Matar y Crear la Tortuga**: Cada vez que el usuario ingresa nuevas coordenadas, se "mata" la tortuga anterior (si estaba presente) y se genera una nueva tortuga en las coordenadas y el ángulo dados. Esto es necesario para empezar siempre desde una posición controlada y no desde donde estaba antes.
+4. **Killing and Creating the Turtle**: Every time the user enters new coordinates, the previous turtle (if present) is "killed" and a new turtle is created at the given coordinates and angle. This is necessary to always start from a controlled position and not from where the turtle was previously.
 
-5. **Cálculo de DTG y ATG siempre cero**: 
-   - Aunque calculamos **DTG** y **ATG**, en este caso ambos valores son **0.0** después de que la tortuga es creada en la nueva meta. Esto se debe a que, como la tortuga está posicionada en la meta de manera instantánea, la distancia entre la posición de la tortuga y la meta es nula.
-   - Por lo tanto, aunque el programa haga los cálculos, **DTG** y **ATG** siempre son cero después de mover la tortuga a la meta.
+5. **DTG and ATG Always Zero**: 
+   - Although we calculate **DTG** and **ATG**, in this case both values are **0.0** after the turtle is created at the new goal. This is because, as the turtle is positioned at the goal instantly, the distance between the turtle's position and the goal is zero.
+   - Therefore, even though the program performs the calculations, **DTG** and **ATG** are always zero after moving the turtle to the goal.
 
-## Uso del bucle `while`
+## Use of the `while` Loop
 
-El bucle `while` se utiliza para permitir que el programa siga corriendo continuamente. Esto le da la posibilidad al usuario de ingresar nuevas coordenadas y ángulos de manera repetitiva, sin tener que reiniciar el programa. Cada vez que se ingresan nuevas coordenadas, el programa repite el proceso de "matar" la tortuga y crearla en la nueva posición, mostrando siempre los nuevos cálculos de **DTG** y **ATG**.
+The `while` loop is used to allow the program to run continuously. This gives the user the ability to input new coordinates and angles repeatedly without needing to restart the program. Each time new coordinates are entered, the program repeats the process of "killing" the turtle and creating it at the new position, always showing the new **DTG** and **ATG** calculations.
 
-El ciclo **`while True`** asegura que el programa siga funcionando hasta que el usuario decida detenerlo manualmente. Esto facilita probar varias ubicaciones sin tener que reiniciar el programa cada vez.
+The **`while True`** loop ensures the program keeps running until the user decides to stop it manually. This makes it easier to test different locations without restarting the program each time.
 
-## Conclusión
+## Conclusion
 
-Este programa muestra cómo interactuar con el sistema ROS para mover una tortuga en un entorno simulado, al mismo tiempo que calcula la distancia y el ángulo hacia un objetivo dado. Al usar la función `atan2` para el ángulo y la fórmula de distancia Euclidiana para el cálculo de la distancia, el programa realiza cálculos precisos sobre cómo la tortuga debe moverse. Además, el uso del bucle `while` permite que el programa sea interactivo, recibiendo entradas continuas sin tener que reiniciarlo. Finalmente, **DTG** y **ATG** siempre serán **0.0** una vez que la tortuga es colocada en la meta, ya que no hay diferencia entre la posición actual y la meta en ese punto.
+This program demonstrates how to interact with the ROS system to move a turtle in a simulated environment while also calculating the distance and angle to a given goal. By using the `atan2` function for the angle and the Euclidean distance formula for calculating distance, the program performs precise calculations on how the turtle should move. Additionally, using the `while` loop allows the program to be interactive, receiving continuous inputs without needing to restart. Finally, **DTG** and **ATG** will always be **0.0** once the turtle is placed at the goal, as there is no difference between the turtle's current position and the goal at that point.
 
-## Dependencias
+## Dependencies
 
 - ROS (Robot Operating System)
-- Paquete `turtlesim` para la simulación de la tortuga
-```
+- `turtlesim` package for turtle simulation
