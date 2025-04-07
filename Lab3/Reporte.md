@@ -42,7 +42,7 @@ This program demonstrates how to interact with the ROS system to move a turtle i
 - ROS (Robot Operating System)
 - `turtlesim` package for turtle simulation
 
-## Part 2
+### Part 2
 # Project: Proportional Control of the Turtle in ROS
 
 In this project, the goal is to control the movement of a turtle in a simulated environment using ROS (Robot Operating System). A proportional controller is used to move the turtle towards a goal specified by the user, without the need to "kill" and "spawn" the turtle at each new position. The controller adjusts the turtle's speed based on the distance and angle to the goal.
