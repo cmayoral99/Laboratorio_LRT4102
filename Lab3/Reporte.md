@@ -91,6 +91,4 @@ This project demonstrates how to use proportional control to move and rotate a t
 - ROS (Robot Operating System)
 - `turtlesim` package for turtle simulation
 
-## Reference
 
-This report was generated with the assistance of **ChatGPT**.
