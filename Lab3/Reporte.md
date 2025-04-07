@@ -1,5 +1,4 @@
 Claudia Mayoral 175787
-Sure! Here's the report translated into English:
 
 ## Part 1
 # Project: Turtle Movement in ROS
@@ -42,3 +41,56 @@ This program demonstrates how to interact with the ROS system to move a turtle i
 
 - ROS (Robot Operating System)
 - `turtlesim` package for turtle simulation
+
+## Part 2
+# Project: Proportional Control of the Turtle in ROS
+
+In this project, the goal is to control the movement of a turtle in a simulated environment using ROS (Robot Operating System). A proportional controller is used to move the turtle towards a goal specified by the user, without the need to "kill" and "spawn" the turtle at each new position. The controller adjusts the turtle's speed based on the distance and angle to the goal.
+
+## What does the program do?
+
+1. **Input coordinates and angle**: The program asks the user to input the **x** and **y** coordinates of the goal, as well as the **theta** angle (in degrees) so that the turtle is properly oriented towards the goal.
+
+2. **Proportional Control**:
+   - **Distance to Goal (DTG)**: It is calculated using the Euclidean distance formula between the turtle's current position and the goal.
+     ```
+     DTG = √((x_goal - x_current)² + (y_goal - y_current)²)
+     ```
+   - **Angle to Goal (ATG)**: It is calculated using the `atan2` function, which gives the angle in radians towards the goal, and then converts it to degrees:
+     ```
+     ATG = atan2(y_goal - y_current, x_goal - x_current)
+     ```
+
+3. **Movement towards the Goal**: Using a proportional controller, the program adjusts the turtle's speed based on the distance error (DTG) and the angle error (ATG). The error is multiplied by proportional constants (`Kp_linear` for distance and `Kp_angular` for angle), thus adjusting the turtle's velocity.
+
+4. **Rotation towards the desired angle**: After moving the turtle to the goal, the program rotates the turtle to the desired angle using the same proportional control principle, with a constant `Kp_theta`.
+
+5. **Stopping when the goal is reached**: When the turtle is sufficiently close to the goal (when **DTG** is less than 0.1), the program stops the movement and rotation.
+
+## Use of Proportional Control
+
+**Proportional control** is used to adjust the turtle's velocities based on distance and angle errors:
+- For distance, the program uses a proportional constant **`Kp_linear`** to control the linear velocity.
+- For the angle, **`Kp_angular`** is used to control the angular velocity, making the turtle rotate towards the goal.
+
+This type of control ensures the turtle moves smoothly and efficiently towards the goal, correcting its path at each iteration.
+
+## Program Flow
+
+1. The program starts by asking the user for the coordinates of the goal and the desired angle.
+2. The turtle moves towards the goal by calculating **DTG** and **ATG** at each cycle.
+3. When the turtle reaches the goal, it stops and then rotates to adjust its orientation according to the desired angle.
+4. The process repeats for new goals, allowing the turtle to move and orient itself correctly.
+
+## Conclusion
+
+This project demonstrates how to use proportional control to move and rotate a turtle in a simulated environment using ROS. The controller adjusts the turtle's speed based on distance and angle errors, allowing the turtle to move efficiently towards a user-specified goal. The rotation towards the desired angle is handled using the same proportional approach, ensuring precise orientation. This approach is simple yet effective for navigation and robot control tasks in controlled environments.
+
+## Dependencies
+
+- ROS (Robot Operating System)
+- `turtlesim` package for turtle simulation
+
+## Reference
+
+This report was generated with the assistance of **ChatGPT**.
